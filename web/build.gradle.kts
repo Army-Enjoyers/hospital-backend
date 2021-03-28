@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    kotlin("jvm")
     id("org.springframework.boot") version "2.4.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     war
-    kotlin("jvm")
     kotlin("plugin.spring") version "1.4.31"
 }
 
@@ -21,8 +21,10 @@ repositories {
 }
 
 dependencies {
+    implementation("com.armyenjoyers:doc-generator")
+
     implementation("io.springfox:springfox-boot-starter:3.0.0")
-    compile("io.springfox:springfox-swagger-ui:3.0.0")
+    implementation("io.springfox:springfox-swagger-ui:3.0.0")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

@@ -1,0 +1,3 @@
+[submodule "doc-generator"]
+	path = doc-generator
+	url = https://github.com/Army-Enjoyers/doc-generator.git
