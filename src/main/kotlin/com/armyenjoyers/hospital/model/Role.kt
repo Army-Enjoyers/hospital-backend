@@ -18,6 +18,6 @@ data class Role(
         joinColumns = [JoinColumn(name = "roles_id")],
         inverseJoinColumns = [JoinColumn(name = "permissions_id")]
     )
-    val roles: List<Permission>
+    val permissions: List<Permission>
 
 )

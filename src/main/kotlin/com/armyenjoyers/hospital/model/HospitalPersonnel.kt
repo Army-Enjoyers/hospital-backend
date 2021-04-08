@@ -11,6 +11,9 @@ data class HospitalPersonnel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
 
+    @Column(name = "username")
+    val username: String,
+
     @Column(name = "first_name")
     val firstName: String,
 
@@ -24,7 +27,7 @@ data class HospitalPersonnel(
     val login: String,
 
     @Column(name = "password")
-    val password: String,
+    var password: String,
 
     @Column(name = "position")
     val position: String,
@@ -35,5 +38,5 @@ data class HospitalPersonnel(
         joinColumns = [JoinColumn(name = "hospital_personel_id")],
         inverseJoinColumns = [JoinColumn(name = "roles_id")]
     )
-    val roles: List<Role>
+    var roles: List<Role>
 )

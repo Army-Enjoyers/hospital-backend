@@ -1,0 +1,10 @@
+package com.armyenjoyers.hospital.service
+
+import com.armyenjoyers.hospital.model.HospitalPersonnel
+
+interface HospitalPersonnelService {
+    fun register(personnel: HospitalPersonnel): HospitalPersonnel
+    fun findAll(): List<HospitalPersonnel>
+    fun findByUsername(username: String?): HospitalPersonnel?
+    fun findById(id: Int): HospitalPersonnel?
+}

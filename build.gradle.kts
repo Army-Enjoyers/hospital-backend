@@ -37,6 +37,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 dependencies {
     implementation("com.armyenjoyers:doc-generator")
 
+    implementation("org.springframework.boot:spring-boot-starter-security:2.4.4")
+
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
 
