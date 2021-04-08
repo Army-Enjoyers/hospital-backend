@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'mydb'
+      MYSQL_USER: $DB_USERNAME
+      MYSQL_PASSWORD: $DB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+    env_file:
+      - .env
+    ports:
+      - $DB_PORT:$DB_PORT
+    expose:
+      - '$DB_PORT'
+    volumes:
+      - ./sql:/sql
+      - my-db:/var/lib/mysql
+volumes:
+  my-db:
