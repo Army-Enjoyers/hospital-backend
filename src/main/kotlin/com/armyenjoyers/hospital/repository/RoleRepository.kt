@@ -1,6 +1,6 @@
 package com.armyenjoyers.hospital.repository
 
-import com.armyenjoyers.hospital.model.Role
+import com.armyenjoyers.hospital.domain.Role
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

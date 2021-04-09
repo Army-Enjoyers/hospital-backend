@@ -1,7 +1,8 @@
 package com.armyenjoyers.hospital.service
 
-import com.armyenjoyers.hospital.model.HospitalPersonnel
-import com.armyenjoyers.hospital.model.Role
+import com.armyenjoyers.hospital.domain.HospitalPersonnel
+import com.armyenjoyers.hospital.domain.Role
+import com.armyenjoyers.hospital.dto.RegistrationRequestDto
 import com.armyenjoyers.hospital.repository.HospitalPersonnelRepository
 import com.armyenjoyers.hospital.repository.RoleRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +21,9 @@ class HospitalPersonnelServiceImpl @Autowired constructor(
         val personnelRoles = listOf(role)
 
         personnel.password = passwordEncoder.encode(personnel.password)
-        personnel.roles = personnelRoles
+        personnel.roles = personnelRoles.toMutableList()
+
+        hospitalPersonnelRepository.save(personnel)
 
         return personnel
     }
@@ -30,11 +33,24 @@ class HospitalPersonnelServiceImpl @Autowired constructor(
     }
 
     override fun findByUsername(username: String?): HospitalPersonnel? {
-        return hospitalPersonnelRepository.fundByUserName(username)
+        return hospitalPersonnelRepository.findByLogin(username)
     }
 
     override fun findById(id: Int): HospitalPersonnel? {
         return hospitalPersonnelRepository.findById(id).orElse(null)
     }
 
+    override fun register(registrationRequestDto: RegistrationRequestDto) {
+        val personnel = HospitalPersonnel(
+            null,
+            registrationRequestDto.firstName,
+            registrationRequestDto.lastName,
+            registrationRequestDto.patronymic,
+            registrationRequestDto.username,
+            registrationRequestDto.password,
+            "position?",
+            mutableListOf<Role>()
+        )
+        register(personnel)
+    }
 }

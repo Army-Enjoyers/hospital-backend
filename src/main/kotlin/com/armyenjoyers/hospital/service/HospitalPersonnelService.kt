@@ -1,10 +1,12 @@
 package com.armyenjoyers.hospital.service
 
-import com.armyenjoyers.hospital.model.HospitalPersonnel
+import com.armyenjoyers.hospital.domain.HospitalPersonnel
+import com.armyenjoyers.hospital.dto.RegistrationRequestDto
 
 interface HospitalPersonnelService {
     fun register(personnel: HospitalPersonnel): HospitalPersonnel
     fun findAll(): List<HospitalPersonnel>
     fun findByUsername(username: String?): HospitalPersonnel?
     fun findById(id: Int): HospitalPersonnel?
+    fun register(registrationRequestDto: RegistrationRequestDto)
 }

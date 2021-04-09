@@ -1,4 +1,4 @@
-package com.armyenjoyers.hospital.model
+package com.armyenjoyers.hospital.domain
 
 import javax.persistence.Column
 import javax.persistence.Entity

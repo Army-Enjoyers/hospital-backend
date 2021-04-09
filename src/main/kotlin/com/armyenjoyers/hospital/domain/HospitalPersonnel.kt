@@ -1,4 +1,4 @@
-package com.armyenjoyers.hospital.model
+package com.armyenjoyers.hospital.domain
 
 import javax.persistence.*
 
@@ -9,10 +9,7 @@ data class HospitalPersonnel(
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
-
-    @Column(name = "username")
-    val username: String,
+    var id: Int?,
 
     @Column(name = "first_name")
     val firstName: String,
@@ -29,7 +26,7 @@ data class HospitalPersonnel(
     @Column(name = "password")
     var password: String,
 
-    @Column(name = "position")
+    @Column(name = "possition")
     val position: String,
 
     @ManyToMany
@@ -38,5 +35,5 @@ data class HospitalPersonnel(
         joinColumns = [JoinColumn(name = "hospital_personel_id")],
         inverseJoinColumns = [JoinColumn(name = "roles_id")]
     )
-    var roles: List<Role>
+    var roles: MutableList<Role>
 )

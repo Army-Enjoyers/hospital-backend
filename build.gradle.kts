@@ -37,6 +37,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 dependencies {
     implementation("com.armyenjoyers:doc-generator")
 
+    implementation ("io.jsonwebtoken:jjwt-api:0.11.2")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+    // for RSASSA-PSS (PS256, PS384, PS512) algorithms:
+    //'org.bouncycastle:bcprov-jdk15on:1.60'
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2") // or 'io.jsonwebtoken:jjwt-gson:0.11.2' for gson
+
     implementation("org.springframework.boot:spring-boot-starter-security:2.4.4")
 
     implementation("io.springfox:springfox-boot-starter:3.0.0")

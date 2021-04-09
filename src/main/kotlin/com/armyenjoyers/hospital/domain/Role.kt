@@ -1,4 +1,4 @@
-package com.armyenjoyers.hospital.model
+package com.armyenjoyers.hospital.domain
 
 import javax.persistence.*
 
@@ -12,12 +12,15 @@ data class Role(
     @Column(name="name")
     val name: String,
 
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
+    val personnel: List<HospitalPersonnel>,
+
     @ManyToMany
     @JoinTable(
         name = "role_permissions",
         joinColumns = [JoinColumn(name = "roles_id")],
         inverseJoinColumns = [JoinColumn(name = "permissions_id")]
     )
-    val permissions: List<Permission>
+    val permissions: MutableList<Permission>
 
 )
