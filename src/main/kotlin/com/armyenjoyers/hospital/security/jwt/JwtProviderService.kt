@@ -39,7 +39,7 @@ class JwtProviderService
 
     @PostConstruct
     fun init() {
-        key = Keys.secretKeyFor(signatureAlgorithm)
+        key = Keys.hmacShaKeyFor(secret.toByteArray(Charsets.UTF_8))
     }
 
     fun createToken(username: String, roles: List<Role>): String {
@@ -52,7 +52,7 @@ class JwtProviderService
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(expiration)
-            .signWith(key, signatureAlgorithm)
+            .signWith(key)
             .compact()
     }
 
