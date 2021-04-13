@@ -11,7 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
-class JwtUserDetailsService @Autowired constructor(
+class JwtUserDetailsService
+@Autowired constructor(
     private val hospitalPersonnelService: HospitalPersonnelService,
     private val jwtUserFactory: JwtUserFactory
 ) : UserDetailsService {

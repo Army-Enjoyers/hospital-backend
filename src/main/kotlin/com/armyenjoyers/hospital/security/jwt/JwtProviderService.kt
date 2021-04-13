@@ -1,6 +1,9 @@
 package com.armyenjoyers.hospital.security.jwt
 
 import com.armyenjoyers.hospital.domain.Role
+import com.armyenjoyers.hospital.domain.Token
+import com.armyenjoyers.hospital.repository.HospitalPersonnelRepository
+import com.armyenjoyers.hospital.repository.TokenRepository
 import com.armyenjoyers.hospital.security.JwtUserDetailsService
 import com.armyenjoyers.hospital.security.exception.JwtAuthenticationException
 import io.jsonwebtoken.Claims
@@ -24,7 +27,9 @@ import javax.servlet.http.HttpServletRequest
 @Service
 class JwtProviderService
 @Autowired constructor(
-    private val userDetailsService: JwtUserDetailsService
+    private val userDetailsService: JwtUserDetailsService,
+    private val tokenRepository: TokenRepository,
+    private val hospitalPersonnelRepository: HospitalPersonnelRepository
 ) {
 
     @Value("\${jwt.secret}")
@@ -43,17 +48,21 @@ class JwtProviderService
     }
 
     fun createToken(username: String, roles: List<Role>): String {
-        val claims: Claims = Jwts.claims().setSubject(username)
-        claims.put("permissions", roles.flatMap { it.permissions })
+        val personnelId: Int = hospitalPersonnelRepository.findByLogin(username)?.id!!
+        val token: Token? = tokenRepository.findByHospitalPersonnelId(personnelId)
+        return if(token != null){
+            token.value
+        } else {
+            val claims: Claims = Jwts.claims().setSubject(username)
+            claims.put("permissions", roles.flatMap { it.permissions })
 
-        val now = Date()
-        val expiration = Date(now.time + expirationPeriod)
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(expiration)
-            .signWith(key)
-            .compact()
+            val jws = Jwts.builder()
+                .setClaims(claims)
+                .signWith(key)
+                .compact()
+            tokenRepository.save(Token(value = jws, hospitalPersonnelId = personnelId, id = null))
+            jws
+        }
     }
 
     fun getAuthentication(token: String): Authentication {

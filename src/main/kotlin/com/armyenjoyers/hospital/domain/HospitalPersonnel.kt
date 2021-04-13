@@ -3,7 +3,7 @@ package com.armyenjoyers.hospital.domain
 import javax.persistence.*
 
 @Entity
-@Table(name = "hospital_personel")
+@Table(name = "hospital_personnel")
 data class HospitalPersonnel(
 
     @Id
@@ -26,13 +26,13 @@ data class HospitalPersonnel(
     @Column(name = "password")
     var password: String,
 
-    @Column(name = "possition")
+    @Column(name = "position")
     val position: String,
 
     @ManyToMany
     @JoinTable(
-        name = "hospital_personel_roles",
-        joinColumns = [JoinColumn(name = "hospital_personel_id")],
+        name = "hospital_personnel_roles",
+        joinColumns = [JoinColumn(name = "hospital_personnel_id")],
         inverseJoinColumns = [JoinColumn(name = "roles_id")]
     )
     var roles: MutableList<Role>

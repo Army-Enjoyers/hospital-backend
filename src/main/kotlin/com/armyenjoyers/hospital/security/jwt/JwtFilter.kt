@@ -17,11 +17,10 @@ class JwtFilter
 ): GenericFilterBean() {
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
-        val token = jwtProviderService.resolveToken(request as HttpServletRequest)
+        val token: String? = jwtProviderService.resolveToken(request as HttpServletRequest)
         if(token != null && jwtProviderService.validateToken(token)){
             val authentication: Authentication = jwtProviderService.getAuthentication(token)
             SecurityContextHolder.getContext().authentication = authentication
-
         }
         chain?.doFilter(request, response)
     }
