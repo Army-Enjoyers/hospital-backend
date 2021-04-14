@@ -1,0 +1,32 @@
+package com.armyenjoyers.hospital.domain.requests
+
+data class ObjectiveStatus(
+    var temperature: Double?,
+    var bodyMassIndex: Double?,
+    var consciousness: String?,
+    var skinAnalysis: String?,
+    var visibleMucousMembranes: String?,
+    var palatineTonsils: String?,
+    var lymphNodes: String?,
+    var thyroid: String?,
+    var osteoarticularSystem: String?,
+    var muscularSystem: String?,
+    var breathingRate: String?,
+    var percussionSound: String?,
+    var breathingSound: String?,
+    var pulseRate: String?,
+    var pulseDeficit: String?,
+    var pulseFilling: String?,
+    var pulseInfo: String?,
+    var arterialPressure: String?,
+    var heart: String?,
+    var tongue: String?,
+    var stomach: String?,
+    var liver: String?,
+    var spleen: String?,
+    var kidneys: String?,
+    var tapping: String?,
+    var urination: String?,
+    var bowelStatus: String?,
+    var swelling: String?
+)
