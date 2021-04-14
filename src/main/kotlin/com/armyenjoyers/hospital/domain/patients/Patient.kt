@@ -9,7 +9,6 @@ import java.time.LocalDate
 @Document("patients")
 data class Patient(
     @Id
-    @set:JsonIgnore
     var id: String?,
 
     var firstName: String,
