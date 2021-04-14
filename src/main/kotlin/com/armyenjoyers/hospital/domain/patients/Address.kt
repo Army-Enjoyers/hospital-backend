@@ -1,11 +1,6 @@
 package com.armyenjoyers.hospital.domain.patients
 
-import org.springframework.data.annotation.Id
-
 data class Address(
-    @Id
-    var id: Int?,
-
     val region: String,
     val district: String,
     val locality: String,
@@ -14,10 +9,7 @@ data class Address(
     val placementNumber: String,
     val phoneNumber: String,
     val homePhoneNumber: String,
-
     val streetType: StreetType,
-
-    val localityType: LocalityType,
-
+    val localityType: String,
     val placementType: PlacementType,
 )

@@ -36,7 +36,7 @@ class HospitalPersonnelServiceImpl @Autowired constructor(
         return username?.let { hospitalPersonnelRepository.findByUsername(it) }
     }
 
-    override fun findById(id: Int): HospitalPersonnel? {
+    override fun findById(id: String): HospitalPersonnel? {
         return hospitalPersonnelRepository.findById(id).orElse(null)
     }
 

@@ -7,6 +7,6 @@ interface HospitalPersonnelService {
     fun register(personnel: HospitalPersonnel): HospitalPersonnel
     fun findAll(): List<HospitalPersonnel>
     fun findByUsername(username: String?): HospitalPersonnel?
-    fun findById(id: Int): HospitalPersonnel?
+    fun findById(id: String): HospitalPersonnel?
     fun register(registrationRequestDto: RegistrationRequestDto)
 }

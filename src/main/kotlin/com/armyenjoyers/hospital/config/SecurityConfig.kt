@@ -29,9 +29,8 @@ class SecurityConfig
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/**").hasAnyRole(Role.USER.name, Role.ADMIN.name)
-                .antMatchers("/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/*").hasAnyRole(Role.USER.name, Role.ADMIN.name)
+                .antMatchers("/*").permitAll()
                 .and()
                 .apply(JwtConfigurer(jwtProviderService))
         }
