@@ -1,15 +1,11 @@
 package com.armyenjoyers.hospital.domain.patients
 
-import javax.persistence.*
+import org.springframework.data.annotation.Id
 
-@Entity
-@Table(name = "life_anamnesis")
-class LifeAnamnesis(
+
+data class LifeAnamnesis(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     var id: Int?,
 
-    @Column(name = "value")
     val value: String
 )

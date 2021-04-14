@@ -37,6 +37,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 dependencies {
     implementation("com.armyenjoyers:doc-generator")
 
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+
     implementation ("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     // for RSASSA-PSS (PS256, PS384, PS512) algorithms:
@@ -54,7 +56,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    api("org.springframework.boot:spring-boot-starter-data-jpa")
 
     runtimeOnly("mysql:mysql-connector-java")
 }

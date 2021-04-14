@@ -1,9 +1,6 @@
 package com.armyenjoyers.hospital.security.jwt
 
 import com.armyenjoyers.hospital.domain.personnel.Role
-import com.armyenjoyers.hospital.domain.personnel.Token
-import com.armyenjoyers.hospital.repository.HospitalPersonnelRepository
-import com.armyenjoyers.hospital.repository.TokenRepository
 import com.armyenjoyers.hospital.security.JwtUserDetailsService
 import com.armyenjoyers.hospital.security.exception.JwtAuthenticationException
 import io.jsonwebtoken.Claims
@@ -15,18 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import java.security.Key
-import java.util.*
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 
 @Service
 class JwtProviderService
 @Autowired constructor(
-    private val userDetailsService: JwtUserDetailsService,
-    private val tokenRepository: TokenRepository,
-    private val hospitalPersonnelRepository: HospitalPersonnelRepository
+    private val userDetailsService: UserDetailsService
 ) {
 
     @Value("\${jwt.secret}")
@@ -45,21 +40,13 @@ class JwtProviderService
     }
 
     fun createToken(username: String, roles: List<Role>): String {
-        val personnelId: Int = hospitalPersonnelRepository.findByLogin(username)?.id!!
-        val token: Token? = tokenRepository.findByHospitalPersonnelId(personnelId)
-        return if(token != null){
-            token.value
-        } else {
-            val claims: Claims = Jwts.claims().setSubject(username)
-            claims.put("permissions", roles.flatMap { it.permissions })
+        val claims: Claims = Jwts.claims().setSubject(username)
+        claims.put("roles", roles)
 
-            val jws = Jwts.builder()
-                .setClaims(claims)
-                .signWith(key)
-                .compact()
-            tokenRepository.save(Token(value = jws, hospitalPersonnelId = personnelId, id = null))
-            jws
-        }
+        return Jwts.builder()
+            .setClaims(claims)
+            .signWith(key)
+            .compact()
     }
 
     fun getAuthentication(token: String): Authentication? {

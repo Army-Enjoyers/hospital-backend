@@ -1,39 +1,29 @@
 package com.armyenjoyers.hospital.domain.personnel
 
-import javax.persistence.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
 
-@Entity
-@Table(name = "hospital_personnel")
+@Document("hospital_personnel")
 data class HospitalPersonnel(
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int?,
+    var id: String?,
 
-    @Column(name = "first_name")
-    val firstName: String,
+    var firstName: String,
 
-    @Column(name = "last_name")
-    val lastName: String,
+    var lastName: String,
 
-    @Column(name = "patronymic")
-    val patronymic: String,
+    var patronymic: String,
 
-    @Column(name = "login")
-    val login: String,
+    @Indexed(unique = true)
+    val username: String,
 
-    @Column(name = "password")
     var password: String,
 
-    @Column(name = "position")
-    val position: String,
+    var position: String,
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "hospital_personnel_roles",
-        joinColumns = [JoinColumn(name = "hospital_personnel_id")],
-        inverseJoinColumns = [JoinColumn(name = "roles_id")]
-    )
-    var roles: MutableList<Role>
+    var roles: MutableList<Role>,
+
+    var token: String
 )

@@ -1,10 +1,10 @@
 package com.armyenjoyers.hospital.repository
 
 import com.armyenjoyers.hospital.domain.personnel.HospitalPersonnel
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.stereotype.Repository
 
-interface HospitalPersonnelRepository: JpaRepository<HospitalPersonnel, Int> {
-    
-    fun findByLogin(login: String?): HospitalPersonnel?
-
+@Repository
+interface HospitalPersonnelRepository : MongoRepository<HospitalPersonnel, Int> {
+    fun findByUsername(username: String?): HospitalPersonnel?
 }

@@ -12,7 +12,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/auth")
@@ -25,15 +28,14 @@ class AuthController
 
     @PostMapping("/login")
     fun login(@RequestBody authenticationRequestDto: AuthenticationRequestDto): ResponseEntity<Any?> {
-        try{
+        try {
             val username = authenticationRequestDto.username
             val password = authenticationRequestDto.password
             authenticationManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
             val hospitalPersonnel = hospitalPersonnelService.findByUsername(username)
                 ?: throw UsernameNotFoundException("User with such username not found")
-            val token = jwtProviderService.createToken(username, hospitalPersonnel.roles)
-            return ResponseEntity.ok(AuthenticationResponseDto(username, token))
-        } catch(ex: JwtAuthenticationException){
+            return ResponseEntity.ok(AuthenticationResponseDto(username, hospitalPersonnel.token))
+        } catch (ex: JwtAuthenticationException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid login or password")
         }
     }

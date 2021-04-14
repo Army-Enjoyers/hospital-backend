@@ -1,13 +1,9 @@
 package com.armyenjoyers.hospital.domain.patients
 
-import javax.persistence.*
+import org.springframework.data.annotation.Id
 
-@Entity
-@Table(name = "addresses")
 data class Address(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="id")
     var id: Int?,
 
     val region: String,
@@ -19,15 +15,9 @@ data class Address(
     val phoneNumber: String,
     val homePhoneNumber: String,
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "street_types_id", nullable = false)
     val streetType: StreetType,
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "locality_types_id", nullable = false)
     val localityType: LocalityType,
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "placement_types_id", nullable = false)
     val placementType: PlacementType,
 )

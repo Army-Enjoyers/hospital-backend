@@ -1,25 +1,17 @@
 package com.armyenjoyers.hospital.domain.patients
 
-import java.time.LocalDateTime
-import javax.persistence.*
+import org.springframework.data.annotation.Id
+import java.time.LocalDate
 
-@Entity
-@Table(name = "military_affiliations")
-data class MilitaryAffiliation (
+data class MilitaryAffiliation(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="id")
     var id: Int?,
 
-//    @Enumerated(EnumType.STRING)
-//    var militaryRank: MilitaryRank,
-//    @Enumerated(EnumType.STRING)
-//    var servicemanCategory: ServicemanCategory,
+    var militaryRank: MilitaryRank,
+    var servicemanCategory: ServicemanCategory,
 
-    @Column(name = "military_commissariat")//TODO comMissariat
     var militaryCommissariat: String,
 
-    @Column(name = "conscription_date")
-    var conscriptionDate: LocalDateTime
+    var conscriptionDate: LocalDate
 
 )

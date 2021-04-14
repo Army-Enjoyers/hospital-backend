@@ -4,17 +4,16 @@ import com.armyenjoyers.hospital.model.ErrorDescription
 import com.armyenjoyers.hospital.security.exception.JwtUsernameNotFoundException
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
-import org.springframework.http.HttpHeaders
-import org.springframework.http.ResponseEntity
-import java.lang.StringBuilder
-import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 
 @RestControllerAdvice
@@ -36,10 +35,12 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatus,
         request: WebRequest
     ): ResponseEntity<Any> {
-        return ResponseEntity.ok(ErrorDescription(
-            ex.message ?:"",
-            HttpStatus.BAD_REQUEST.value()
-        ))
+        return ResponseEntity.ok(
+            ErrorDescription(
+                ex.message ?: "",
+                HttpStatus.BAD_REQUEST.value()
+            )
+        )
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

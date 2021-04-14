@@ -1,8 +1,6 @@
 package com.armyenjoyers.hospital.dto
 
-import javax.persistence.Column
-
-data class RegistrationRequestDto (
+data class RegistrationRequestDto(
     val username: String,
     val firstName: String,
     val lastName: String,

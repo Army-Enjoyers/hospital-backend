@@ -1,14 +1,7 @@
 package com.armyenjoyers.hospital.domain
 
-import javax.persistence.*
 
-@MappedSuperclass
-data class BaseTypeEntity (
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="id")
+data class BaseTypeEntity(
     var id: Int?,
-
-    @Column(name="name")
     val name: String
 )

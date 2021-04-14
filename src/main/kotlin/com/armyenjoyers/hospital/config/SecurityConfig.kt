@@ -1,5 +1,6 @@
 package com.armyenjoyers.hospital.config
 
+import com.armyenjoyers.hospital.domain.personnel.Role
 import com.armyenjoyers.hospital.security.jwt.JwtConfigurer
 import com.armyenjoyers.hospital.security.jwt.JwtProviderService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 class SecurityConfig
 @Autowired constructor(
     private val jwtProviderService: JwtProviderService
-): WebSecurityConfigurerAdapter() {
+) : WebSecurityConfigurerAdapter() {
 
     @Bean
     override fun authenticationManagerBean(): AuthenticationManager {
@@ -22,14 +23,14 @@ class SecurityConfig
     }
 
     override fun configure(http: HttpSecurity?) {
-        http?.let{
+        http?.let {
             it.httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/api/**").hasAnyAuthority("user:get:*", "user:write:*")
-                .antMatchers("/**", ).permitAll()
+                .antMatchers("/api/**").hasAnyRole(Role.USER.name, Role.ADMIN.name)
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(JwtConfigurer(jwtProviderService))

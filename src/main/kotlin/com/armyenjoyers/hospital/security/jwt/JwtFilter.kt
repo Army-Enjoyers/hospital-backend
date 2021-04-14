@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServletRequest
 class JwtFilter
 @Autowired constructor(
     private val jwtProviderService: JwtProviderService
-): GenericFilterBean() {
+) : GenericFilterBean() {
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val token: String? = jwtProviderService.resolveToken(request as HttpServletRequest)
-        if(token != null && jwtProviderService.validateToken(token)){
+        if (token != null && jwtProviderService.validateToken(token)) {
             val authentication: Authentication? = jwtProviderService.getAuthentication(token)
             SecurityContextHolder.getContext().authentication = authentication
         }

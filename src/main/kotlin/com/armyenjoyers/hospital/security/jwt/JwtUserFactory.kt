@@ -12,7 +12,7 @@ class JwtUserFactory {
     fun create(personnel: HospitalPersonnel): JwtUser {
         return JwtUser(
             personnel.id!!,
-            personnel.login,
+            personnel.username,
             personnel.firstName,
             personnel.lastName,
             personnel.password,
@@ -23,9 +23,9 @@ class JwtUserFactory {
 
     companion object {
         fun mapToGrantedAuthority(roles: List<Role>): MutableList<GrantedAuthority> {
-            return roles.flatMap {it.permissions}.map { permission ->
-                    SimpleGrantedAuthority(permission.name)
-                }.toMutableList()
+            return roles.map { role ->
+                SimpleGrantedAuthority(role.name)
+            }.toMutableList()
         }
     }
 
