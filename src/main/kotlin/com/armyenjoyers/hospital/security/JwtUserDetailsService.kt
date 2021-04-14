@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class JwtUserDetailsService
@@ -17,8 +18,9 @@ class JwtUserDetailsService
     private val jwtUserFactory: JwtUserFactory
 ) : UserDetailsService {
 
-    override fun loadUserByUsername(username: String?): UserDetails {
-        val personnel = hospitalPersonnelService.findByUsername(username) ?: throw UsernameNotFoundException(username)
-        return jwtUserFactory.create(personnel)
+    @Transactional
+    override fun loadUserByUsername(username: String?): UserDetails? {
+        val personnel = hospitalPersonnelService.findByUsername(username)
+        return personnel?.let { jwtUserFactory.create(it) }
     }
 }

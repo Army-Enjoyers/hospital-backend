@@ -1,6 +1,6 @@
 package com.armyenjoyers.hospital.service
 
-import com.armyenjoyers.hospital.domain.HospitalPersonnel
+import com.armyenjoyers.hospital.domain.personnel.HospitalPersonnel
 import com.armyenjoyers.hospital.dto.RegistrationRequestDto
 
 interface HospitalPersonnelService {

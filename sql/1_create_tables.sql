@@ -4,7 +4,7 @@ DROP SCHEMA IF EXISTS `mydb`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
 -- Schema mydb
@@ -13,87 +13,16 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8mb4 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`contingent`
+-- Table `mydb`.`locality_types`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`contingent` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`military_affiliations`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`military_affiliations` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `military_rank` ENUM("рядовой", "ефрейтор", "младший сержант", "сержант", "старший сержант", "старшина", "прапорщик", "старший прапорщик", "младший лейтенант", "лейтенант", "старший лейтенант", "капитан", "майор", "подполковник", "полковник", "генерал-майор", "генерал-лейтенант", "генерал-полковник") NOT NULL,
-  `serviceman_category` ENUM("офицеры", "прапорщики", "контрактники", "срочники", "курсанты") NOT NULL,
-  `military_comissariat` VARCHAR(255) NOT NULL,
-  `conscription_date` TIMESTAMP(4) NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`life_anamnesis`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`life_anamnesis` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `value` MEDIUMTEXT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`patients`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`patients` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `last_name` VARCHAR(128) NOT NULL,
-  `fisrt_name` VARCHAR(128) NOT NULL,
-  `patronymic` VARCHAR(128) NOT NULL,
-  `birth_date` TIMESTAMP(4) NOT NULL,
-  `gender` VARCHAR(128) NOT NULL,
-  `citizenship` VARCHAR(128) NOT NULL,
-  `job` VARCHAR(255) NULL,
-  `polyclinic` VARCHAR(128) NOT NULL,
-  `pensioner_id` VARCHAR(128) NULL,
-  `outpatient_card_number` VARCHAR(255) NULL,
-  `additional_info` TEXT(1024) NULL,
-  `contingent_id` INT NOT NULL,
-  `anamnesis_of_life_id` INT NOT NULL,
-  `military_affiliations_id` INT NULL,
-  `military_affiliations_id1` INT NULL,
-  `contingent_id1` INT NOT NULL,
-  `life_anamnesis_id` INT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_patients_contingent1_idx` (`contingent_id1` ASC),
-  INDEX `fk_patients_military_affiliations1_idx` (`military_affiliations_id1` ASC),
-  INDEX `fk_patients_life_anamnesis1_idx` (`life_anamnesis_id` ASC),
-  CONSTRAINT `fk_patients_contingent1`
-    FOREIGN KEY (`contingent_id1`)
-    REFERENCES `mydb`.`contingent` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_patients_military_affiliations1`
-    FOREIGN KEY (`military_affiliations_id1`)
-    REFERENCES `mydb`.`military_affiliations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_patients_life_anamnesis1`
-    FOREIGN KEY (`life_anamnesis_id`)
-    REFERENCES `mydb`.`life_anamnesis` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+CREATE TABLE IF NOT EXISTS `mydb`.`locality_types` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(128) NOT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -105,18 +34,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`street_types` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`locality_type`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`locality_type` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(128) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -126,8 +46,91 @@ CREATE TABLE IF NOT EXISTS `mydb`.`placement_types` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`contingents`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`contingents` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`life_anamnesis`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`life_anamnesis` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `value` MEDIUMTEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`military_affiliations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`military_affiliations` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+--   `military_rank` ENUM('рядовой', 'ефрейтор', 'младший сержант', 'сержант', 'старший сержант', 'старшина', 'прапорщик', 'старший прапорщик', 'младший лейтенант', 'лейтенант', 'старший лейтенант', 'капитан', 'майор', 'подполковник', 'полковник', 'генерал-майор', 'генерал-лейтенант', 'генерал-полковник') NOT NULL,
+--   `serviceman_category` ENUM('офицеры', 'прапорщики', 'контрактники', 'срочники', 'курсанты') NOT NULL,
+  `military_commissariat` VARCHAR(255) NOT NULL,
+  `conscription_date` TIMESTAMP(4) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`patients`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`patients` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `last_name` VARCHAR(128) NOT NULL,
+  `first_name` VARCHAR(128) NOT NULL,
+  `patronymic` VARCHAR(128) NOT NULL,
+  `birth_date` TIMESTAMP(4) NOT NULL,
+  `gender` VARCHAR(128) NOT NULL,
+  `citizenship` VARCHAR(128) NOT NULL,
+  `job` VARCHAR(255) NULL DEFAULT NULL,
+  `polyclinic` VARCHAR(128) NOT NULL,
+  `pensioner_id` VARCHAR(128) NULL DEFAULT NULL,
+  `outpatient_card_number` VARCHAR(255) NULL DEFAULT NULL,
+  `additional_info` TEXT NULL DEFAULT NULL,
+  `contingents_id` INT NOT NULL,
+  `life_anamnesis_id` INT NULL,
+  `military_affiliations_id` INT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_patients_contingents_idx` (`contingents_id` ASC) VISIBLE,
+  INDEX `fk_patients_life_anamnesis_idx` (`life_anamnesis_id` ASC) VISIBLE,
+  INDEX `fk_patients_military_affiliations_idx` (`military_affiliations_id` ASC) VISIBLE,
+  CONSTRAINT `fk_patients_contingents`
+    FOREIGN KEY (`contingents_id`)
+    REFERENCES `mydb`.`contingents` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_patients_life_anamnesis`
+    FOREIGN KEY (`life_anamnesis_id`)
+    REFERENCES `mydb`.`life_anamnesis` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_patients_military_affiliations`
+    FOREIGN KEY (`military_affiliations_id`)
+    REFERENCES `mydb`.`military_affiliations` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -138,29 +141,29 @@ CREATE TABLE IF NOT EXISTS `mydb`.`addresses` (
   `region` VARCHAR(128) NOT NULL,
   `district` VARCHAR(128) NOT NULL,
   `locality` VARCHAR(128) NOT NULL,
-  `street_adress` VARCHAR(128) NOT NULL,
+  `street_address` VARCHAR(128) NOT NULL,
   `house_number` VARCHAR(64) NOT NULL,
   `placement_number` VARCHAR(64) NOT NULL,
   `phone_number` VARCHAR(128) NOT NULL,
-  `home_phone_number` VARCHAR(128) NULL,
+  `home_phone_number` VARCHAR(128) NULL DEFAULT NULL,
+  `locality_types_id` INT NOT NULL,
   `street_types_id` INT NOT NULL,
-  `locality_type_id` INT NOT NULL,
   `placement_types_id` INT NOT NULL,
-  `patients_id` INT(11) NOT NULL,
+  `patients_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_addresses_street_types1_idx` (`street_types_id` ASC),
-  INDEX `fk_addresses_locality_type1_idx` (`locality_type_id` ASC),
-  INDEX `fk_addresses_placement_types1_idx` (`placement_types_id` ASC),
-  INDEX `fk_addresses_patients1_idx` (`patients_id` ASC),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_addresses_locality_types_idx` (`locality_types_id` ASC) VISIBLE,
+  INDEX `fk_addresses_street_types_idx` (`street_types_id` ASC) VISIBLE,
+  INDEX `fk_addresses_placement_types_idx` (`placement_types_id` ASC) VISIBLE,
+  INDEX `fk_addresses_patients_idx` (`patients_id` ASC) VISIBLE,
+  CONSTRAINT `fk_addresses_locality_types`
+    FOREIGN KEY (`locality_types_id`)
+    REFERENCES `mydb`.`locality_types` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_addresses_street_types`
     FOREIGN KEY (`street_types_id`)
     REFERENCES `mydb`.`street_types` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_addresses_locality_type`
-    FOREIGN KEY (`locality_type_id`)
-    REFERENCES `mydb`.`locality_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_addresses_placement_types`
@@ -173,94 +176,44 @@ CREATE TABLE IF NOT EXISTS `mydb`.`addresses` (
     REFERENCES `mydb`.`patients` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`disability_type`
+-- Table `mydb`.`completed_procedures`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`disability_type` (
+CREATE TABLE IF NOT EXISTS `mydb`.`completed_procedures` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`disability_types`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`disability_types` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`privileges`
+-- Table `mydb`.`manipulations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`privileges` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(128) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`patients_disability`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`patients_disability` (
-  `start_date` TIME NULL,
-  `patients_id` INT(11) NOT NULL,
-  `disability_type_id` INT NOT NULL,
-  INDEX `fk_patients_disability_patients1_idx` (`patients_id` ASC),
-  INDEX `fk_patients_disability_disability_type1_idx` (`disability_type_id` ASC),
-  CONSTRAINT `fk_patients_disability_patients1`
-    FOREIGN KEY (`patients_id`)
-    REFERENCES `mydb`.`patients` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_patients_disability_disability_type1`
-    FOREIGN KEY (`disability_type_id`)
-    REFERENCES `mydb`.`disability_type` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`patients_privileges`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`patients_privileges` (
-  `patients_id1` INT(11) NOT NULL,
-  `privileges_id1` INT NOT NULL,
-  INDEX `fk_patients_privileges_patients1_idx` (`patients_id1` ASC),
-  INDEX `fk_patients_privileges_privileges1_idx` (`privileges_id1` ASC),
-  CONSTRAINT `fk_patients_privileges_patients1`
-    FOREIGN KEY (`patients_id1`)
-    REFERENCES `mydb`.`patients` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_patients_privileges_privileges1`
-    FOREIGN KEY (`privileges_id1`)
-    REFERENCES `mydb`.`privileges` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`medical_board_requests`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`medical_board_requests` (
+CREATE TABLE IF NOT EXISTS `mydb`.`manipulations` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `board_name` VARCHAR(128) NOT NULL,
-  `result` TEXT(1024) NULL,
+  `name` TEXT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`request_types`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`request_types` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(64) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -270,90 +223,96 @@ CREATE TABLE IF NOT EXISTS `mydb`.`treatment_referrals` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `destination` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`paid_services`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`paid_services` (
-  `id` BIGINT(14) NOT NULL,
+  `id` BIGINT NOT NULL,
   `contract_number` VARCHAR(128) NOT NULL,
-  `insurance_number` VARCHAR(128) NULL,
+  `insurance_number` VARCHAR(128) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`medical_request`
+-- Table `mydb`.`request_types`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`medical_request` (
-  `id` BIGINT(14) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mydb`.`request_types` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`medical_board_requests`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`medical_board_requests` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `board_name` VARCHAR(128) NOT NULL,
+  `result` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`medical_requests`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`medical_requests` (
+  `id` BIGINT NOT NULL,
   `request_date` TIMESTAMP(4) NOT NULL,
-  `home_visit` SMALLINT(4) NOT NULL,
-  `planned_hospitalization` SMALLINT(4) NULL,
-  `patients_id` INT(11) NOT NULL,
-  `request_types_id` INT NOT NULL,
+  `home_visit` SMALLINT NOT NULL,
+  `planned_hospitalization` SMALLINT NULL DEFAULT NULL,
+  `patients_id` INT NOT NULL,
   `treatment_referrals_id` INT NULL,
-  `medical_boards_id` INT NULL,
-  `paid_services_id` BIGINT(14) NULL,
+  `paid_services_id` BIGINT NULL,
+  `request_types_id` INT NOT NULL,
+  `medical_board_requests_id` INT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_medical_request_medical_boards1_idx` (`medical_boards_id` ASC),
-  INDEX `fk_medical_request_request_types1_idx` (`request_types_id` ASC),
-  INDEX `fk_medical_request_treatment_referrals1_idx` (`treatment_referrals_id` ASC),
-  INDEX `fk_medical_request_patients1_idx` (`patients_id` ASC),
-  INDEX `fk_medical_request_paid_services1_idx` (`paid_services_id` ASC),
-  CONSTRAINT `fk_medical_request_medical_boards`
-    FOREIGN KEY (`medical_boards_id`)
-    REFERENCES `mydb`.`medical_board_requests` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_medical_request_request_types`
-    FOREIGN KEY (`request_types_id`)
-    REFERENCES `mydb`.`request_types` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_medical_request_treatment_referrals`
-    FOREIGN KEY (`treatment_referrals_id`)
-    REFERENCES `mydb`.`treatment_referrals` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_medical_request_patients`
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_medical_requests_patients_idx` (`patients_id` ASC) VISIBLE,
+  INDEX `fk_medical_requests_treatment_referrals_idx` (`treatment_referrals_id` ASC) VISIBLE,
+  INDEX `fk_medical_requests_paid_services_idx` (`paid_services_id` ASC) VISIBLE,
+  INDEX `fk_medical_requests_request_types_idx` (`request_types_id` ASC) VISIBLE,
+  INDEX `fk_medical_requests_medical_board_requests_idx` (`medical_board_requests_id` ASC) VISIBLE,
+  CONSTRAINT `fk_medical_requests_patients`
     FOREIGN KEY (`patients_id`)
     REFERENCES `mydb`.`patients` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_medical_request_paid_services`
+  CONSTRAINT `fk_medical_requests_treatment_referrals`
+    FOREIGN KEY (`treatment_referrals_id`)
+    REFERENCES `mydb`.`treatment_referrals` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_medical_requests_paid_services`
     FOREIGN KEY (`paid_services_id`)
     REFERENCES `mydb`.`paid_services` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_medical_requests_request_types`
+    FOREIGN KEY (`request_types_id`)
+    REFERENCES `mydb`.`request_types` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_medical_requests_medical_board_requests`
+    FOREIGN KEY (`medical_board_requests_id`)
+    REFERENCES `mydb`.`medical_board_requests` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`completed_procedures`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`completed_procedures` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` TEXT(1024) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`manipulations`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`manipulations` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` TEXT(1024) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -362,84 +321,40 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`diseases` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `mkb10_code` VARCHAR(255) NOT NULL,
-  `main_diagnosis` TEXT(16384) NOT NULL,
-  `co_diagnosis` TEXT(4096) NULL,
-  `complications` TEXT(4096) NULL,
-  `anamnesis` TEXT(65535) NULL,
-  `complaints` TEXT(4096) NULL,
-  `lab_examination_interpretation` TEXT(8192) NULL,
-  `instrumental_examination_interpretation` TEXT(8192) NULL,
-  `extra` TEXT(8192) NULL,
-  `recommendations` TEXT(8192) NULL,
-  `procedures_id` INT NULL,
+  `main_diagnosis` TEXT NOT NULL,
+  `co_diagnosis` TEXT NULL DEFAULT NULL,
+  `complications` TEXT NULL DEFAULT NULL,
+  `anamnesis` MEDIUMTEXT NULL DEFAULT NULL,
+  `complaints` TEXT NULL DEFAULT NULL,
+  `lab_examination_interpretation` TEXT NULL DEFAULT NULL,
+  `instrumental_examination_interpretation` TEXT NULL DEFAULT NULL,
+  `extra` TEXT NULL DEFAULT NULL,
+  `recommendations` TEXT NULL DEFAULT NULL,
+  `completed_procedures_id` INT NULL,
   `manipulations_id` INT NULL,
-  `medical_request_id` BIGINT(14) NOT NULL,
+  `medical_requests_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_diseases_procedures1_idx` (`procedures_id` ASC),
-  INDEX `fk_diseases_manipulations1_idx` (`manipulations_id` ASC),
-  INDEX `fk_diseases_medical_request1_idx` (`medical_request_id` ASC),
-  CONSTRAINT `fk_diseases_procedures1`
-    FOREIGN KEY (`procedures_id`)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_diseases_completed_procedures_idx` (`completed_procedures_id` ASC) VISIBLE,
+  INDEX `fk_diseases_manipulations_idx` (`manipulations_id` ASC) VISIBLE,
+  INDEX `fk_diseases_medical_requests_idx` (`medical_requests_id` ASC) VISIBLE,
+  CONSTRAINT `fk_diseases_completed_procedures`
+    FOREIGN KEY (`completed_procedures_id`)
     REFERENCES `mydb`.`completed_procedures` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_diseases_manipulations1`
+  CONSTRAINT `fk_diseases_manipulations`
     FOREIGN KEY (`manipulations_id`)
     REFERENCES `mydb`.`manipulations` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_diseases_medical_request1`
-    FOREIGN KEY (`medical_request_id`)
-    REFERENCES `mydb`.`medical_request` (`id`)
+  CONSTRAINT `fk_diseases_medical_requests`
+    FOREIGN KEY (`medical_requests_id`)
+    REFERENCES `mydb`.`medical_requests` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`objective_statuses`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`objective_statuses` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `temperature` FLOAT NULL,
-  `body_mass_index` FLOAT NULL,
-  `consciousness` VARCHAR(255) NULL,
-  `skin` TEXT(1024) NULL,
-  `visible_mucous_membranes` VARCHAR(255) NULL,
-  `palatine_tonsils` VARCHAR(255) NULL,
-  `lymph_nodes` VARCHAR(255) NULL,
-  `thyroid` VARCHAR(255) NULL,
-  `osteoarticular_system` TEXT(1024) NULL,
-  `muscular_system` TEXT(1024) NULL,
-  `breathing_rate` VARCHAR(255) NULL,
-  `percussion_sound` VARCHAR(255) NULL,
-  `breathing_sound` VARCHAR(255) NULL,
-  `pulse_rate` VARCHAR(128) NULL,
-  `pulse_deficit` VARCHAR(128) NULL,
-  `pulse_filling` VARCHAR(128) NULL,
-  `pulse_info` VARCHAR(255) NULL,
-  `arterial_pressure` VARCHAR(128) NULL,
-  `heart_info` TEXT(1024) NULL,
-  `tongue` VARCHAR(128) NULL,
-  `stomach` VARCHAR(255) NULL,
-  `liver` VARCHAR(255) NULL,
-  `spleen` VARCHAR(255) NULL,
-  `kidneys` VARCHAR(255) NULL,
-  `tapping_symptom` VARCHAR(128) NULL,
-  `urination` VARCHAR(255) NULL,
-  `bowel_status` VARCHAR(128) NULL,
-  `swelling` VARCHAR(255) NULL,
-  `medical_request_id` BIGINT(14) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_objective_statuses_medical_request1_idx` (`medical_request_id` ASC),
-  CONSTRAINT `fk_objective_statuses_medical_request`
-    FOREIGN KEY (`medical_request_id`)
-    REFERENCES `mydb`.`medical_request` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -450,12 +365,13 @@ CREATE TABLE IF NOT EXISTS `mydb`.`hospital_personnel` (
   `first_name` VARCHAR(128) NOT NULL,
   `last_name` VARCHAR(128) NOT NULL,
   `patronymic` VARCHAR(128) NOT NULL,
-  `login` VARCHAR(128) NOT NULL,
+  `login` VARCHAR(128) NOT NULL UNIQUE,
   `password` VARCHAR(128) NOT NULL,
   `position` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -469,25 +385,26 @@ CREATE TABLE IF NOT EXISTS `mydb`.`hospital_certificates` (
   `release_start` TIMESTAMP(4) NOT NULL,
   `release_end` TIMESTAMP(4) NOT NULL,
   `cause_code` INT NOT NULL,
-  `purpose` VARCHAR(255) NULL,
-  `note` VARCHAR(255) NULL,
-  `patients_id` INT(11) NOT NULL,
+  `purpose` VARCHAR(255) NULL DEFAULT NULL,
+  `note` VARCHAR(255) NULL DEFAULT NULL,
+  `patients_id` INT NOT NULL,
   `hospital_personnel_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_hospital_certificates_patients1_idx` (`patients_id` ASC),
-  INDEX `fk_hospital_certificates_hospital_personnel1_idx` (`hospital_personnel_id` ASC),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_hospital_certificates_patients_idx` (`patients_id` ASC) VISIBLE,
+  INDEX `fk_hospital_certificates_hospital_personnel_idx` (`hospital_personnel_id` ASC) VISIBLE,
   CONSTRAINT `fk_hospital_certificates_patients`
     FOREIGN KEY (`patients_id`)
     REFERENCES `mydb`.`patients` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_hospital_certificates_hospital_personnel1`
+  CONSTRAINT `fk_hospital_certificates_hospital_personnel`
     FOREIGN KEY (`hospital_personnel_id`)
     REFERENCES `mydb`.`hospital_personnel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -497,7 +414,132 @@ CREATE TABLE IF NOT EXISTS `mydb`.`roles` (
   `id` INT NOT NULL,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`hospital_personnel_roles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`hospital_personnel_roles` (
+  `hospital_personnel_id` INT NOT NULL,
+  `roles_id` INT NOT NULL,
+  INDEX `fk_hospital_personnel_roles_hospital_personnel_idx` (`hospital_personnel_id` ASC) VISIBLE,
+  INDEX `fk_hospital_personnel_roles_roles_idx` (`roles_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospital_personnel_roles_hospital_personnel`
+    FOREIGN KEY (`hospital_personnel_id`)
+    REFERENCES `mydb`.`hospital_personnel` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hospital_personnel_roles_roles`
+    FOREIGN KEY (`roles_id`)
+    REFERENCES `mydb`.`roles` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`objective_statuses`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`objective_statuses` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `temperature` FLOAT NULL DEFAULT NULL,
+  `body_mass_index` FLOAT NULL DEFAULT NULL,
+  `consciousness` VARCHAR(255) NULL DEFAULT NULL,
+  `skin` TEXT NULL DEFAULT NULL,
+  `visible_mucous_membranes` VARCHAR(255) NULL DEFAULT NULL,
+  `palatine_tonsils` VARCHAR(255) NULL DEFAULT NULL,
+  `lymph_nodes` VARCHAR(255) NULL DEFAULT NULL,
+  `thyroid` VARCHAR(255) NULL DEFAULT NULL,
+  `osteoarticular_system` TEXT NULL DEFAULT NULL,
+  `muscular_system` TEXT NULL DEFAULT NULL,
+  `breathing_rate` VARCHAR(255) NULL DEFAULT NULL,
+  `percussion_sound` VARCHAR(255) NULL DEFAULT NULL,
+  `breathing_sound` VARCHAR(255) NULL DEFAULT NULL,
+  `pulse_rate` VARCHAR(128) NULL DEFAULT NULL,
+  `pulse_deficit` VARCHAR(128) NULL DEFAULT NULL,
+  `pulse_filling` VARCHAR(128) NULL DEFAULT NULL,
+  `pulse_info` VARCHAR(255) NULL DEFAULT NULL,
+  `arterial_pressure` VARCHAR(128) NULL DEFAULT NULL,
+  `heart_info` TEXT NULL DEFAULT NULL,
+  `tongue` VARCHAR(128) NULL DEFAULT NULL,
+  `stomach` VARCHAR(255) NULL DEFAULT NULL,
+  `liver` VARCHAR(255) NULL DEFAULT NULL,
+  `spleen` VARCHAR(255) NULL DEFAULT NULL,
+  `kidneys` VARCHAR(255) NULL DEFAULT NULL,
+  `tapping_symptom` VARCHAR(128) NULL DEFAULT NULL,
+  `urination` VARCHAR(255) NULL DEFAULT NULL,
+  `bowel_status` VARCHAR(128) NULL DEFAULT NULL,
+  `swelling` VARCHAR(255) NULL DEFAULT NULL,
+  `medical_requests_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_objective_statuses_medical_requests_idx` (`medical_requests_id` ASC) VISIBLE,
+  CONSTRAINT `fk_objective_statuses_medical_requests`
+    FOREIGN KEY (`medical_requests_id`)
+    REFERENCES `mydb`.`medical_requests` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`patients_disabilities`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`patients_disabilities` (
+  `start_date` TIME NULL DEFAULT NULL,
+  `disability_types_id` INT NOT NULL,
+  `patients_id` INT NOT NULL,
+  INDEX `fk_patients_disabilities_disability_types_idx` (`disability_types_id` ASC) VISIBLE,
+  INDEX `fk_patients_disabilities_patients_idx` (`patients_id` ASC) VISIBLE,
+  CONSTRAINT `fk_patients_disabilities_disability_types`
+    FOREIGN KEY (`disability_types_id`)
+    REFERENCES `mydb`.`disability_types` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_patients_disabilities_patients`
+    FOREIGN KEY (`patients_id`)
+    REFERENCES `mydb`.`patients` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`privileges`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`privileges` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(128) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`patients_privileges`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`patients_privileges` (
+  `privileges_id` INT NOT NULL,
+  `patients_id` INT NOT NULL,
+  INDEX `fk_patients_privileges_privileges_idx` (`privileges_id` ASC) VISIBLE,
+  INDEX `fk_patients_privileges_patients_idx` (`patients_id` ASC) VISIBLE,
+  CONSTRAINT `fk_patients_privileges_privileges`
+    FOREIGN KEY (`privileges_id`)
+    REFERENCES `mydb`.`privileges` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_patients_privileges_patients`
+    FOREIGN KEY (`patients_id`)
+    REFERENCES `mydb`.`patients` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -507,92 +549,76 @@ CREATE TABLE IF NOT EXISTS `mydb`.`permissions` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`hospital_personnel_roles`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`hospital_personnel_roles` (
-  `hospital_personnel_id` INT NOT NULL,
-  `roles_id` INT NOT NULL,
-  INDEX `fk_hospital_personnel_roles_hospital_personnel1_idx` (`hospital_personnel_id` ASC),
-  INDEX `fk_hospital_personnel_roles_roles1_idx` (`roles_id` ASC),
-  CONSTRAINT `fk_hospital_personnel_roles_hospital_personnel1`
-    FOREIGN KEY (`hospital_personnel_id`)
-    REFERENCES `mydb`.`hospital_personnel` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_hospital_personnel_roles_roles1`
-    FOREIGN KEY (`roles_id`)
-    REFERENCES `mydb`.`roles` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`role_permissions`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`role_permissions` (
-  `permissions_id` INT NOT NULL,
-  `roles_id` INT NOT NULL,
-  INDEX `fk_role_permissions_permissions1_idx` (`permissions_id` ASC),
-  INDEX `fk_role_permissions_roles1_idx` (`roles_id` ASC),
-  CONSTRAINT `fk_role_permissions_permissions1`
-    FOREIGN KEY (`permissions_id`)
-    REFERENCES `mydb`.`permissions` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_role_permissions_roles1`
-    FOREIGN KEY (`roles_id`)
-    REFERENCES `mydb`.`roles` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`request_personnel`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`request_personnel` (
-  `action` VARCHAR(255) NULL,
-  `medical_request_id1` BIGINT(14) NOT NULL,
+  `action` VARCHAR(255) NULL DEFAULT NULL,
+  `medical_requests_id` BIGINT NOT NULL,
   `hospital_personnel_id` INT NOT NULL,
-  INDEX `fk_request_personnel_medical_request1_idx` (`medical_request_id1` ASC),
-  INDEX `fk_request_personnel_hospital_personnel1_idx` (`hospital_personnel_id` ASC),
-  CONSTRAINT `fk_request_personnel_medical_request1`
-    FOREIGN KEY (`medical_request_id1`)
-    REFERENCES `mydb`.`medical_request` (`id`)
+  INDEX `fk_request_personnel_medical_requests_idx` (`medical_requests_id` ASC) VISIBLE,
+  INDEX `fk_request_personnel_hospital_personnel_idx` (`hospital_personnel_id` ASC) VISIBLE,
+  CONSTRAINT `fk_request_personnel_medical_requests`
+    FOREIGN KEY (`medical_requests_id`)
+    REFERENCES `mydb`.`medical_requests` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_request_personnel_hospital_personnel1`
+  CONSTRAINT `fk_request_personnel_hospital_personnel`
     FOREIGN KEY (`hospital_personnel_id`)
     REFERENCES `mydb`.`hospital_personnel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`token`
+-- Table `mydb`.`role_permissions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`token` (
+CREATE TABLE IF NOT EXISTS `mydb`.`role_permissions` (
+  `roles_id` INT NOT NULL,
+  `permissions_id` INT NOT NULL,
+  INDEX `fk_role_permissions_roles_idx` (`roles_id` ASC) VISIBLE,
+  INDEX `fk_role_permissions_permissions_idx` (`permissions_id` ASC) VISIBLE,
+  CONSTRAINT `fk_role_permissions_roles`
+    FOREIGN KEY (`roles_id`)
+    REFERENCES `mydb`.`roles` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_role_permissions_permissions`
+    FOREIGN KEY (`permissions_id`)
+    REFERENCES `mydb`.`permissions` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`tokens` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `value` VARCHAR(255) NOT NULL,
+  `value` TEXT(4096) NOT NULL,
   `hospital_personnel_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_token_hospital_personnel1_idx` (`hospital_personnel_id` ASC),
-  CONSTRAINT `fk_token_hospital_personnel1`
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_tokens_hospital_personnel_idx` (`hospital_personnel_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tokens_hospital_personnel`
     FOREIGN KEY (`hospital_personnel_id`)
     REFERENCES `mydb`.`hospital_personnel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+

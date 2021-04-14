@@ -1,7 +1,7 @@
 package com.armyenjoyers.hospital.security.jwt
 
-import com.armyenjoyers.hospital.domain.Role
-import com.armyenjoyers.hospital.domain.Token
+import com.armyenjoyers.hospital.domain.personnel.Role
+import com.armyenjoyers.hospital.domain.personnel.Token
 import com.armyenjoyers.hospital.repository.HospitalPersonnelRepository
 import com.armyenjoyers.hospital.repository.TokenRepository
 import com.armyenjoyers.hospital.security.JwtUserDetailsService
@@ -12,13 +12,10 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
-import java.lang.Integer.min
 import java.security.Key
 import java.util.*
 import javax.annotation.PostConstruct
@@ -65,9 +62,11 @@ class JwtProviderService
         }
     }
 
-    fun getAuthentication(token: String): Authentication {
+    fun getAuthentication(token: String): Authentication? {
         val userDetails = userDetailsService.loadUserByUsername(getUserName(token))
-        return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
+        return userDetails?.let {
+            UsernamePasswordAuthenticationToken(userDetails, "", it.authorities)
+        }
     }
 
     fun getUserName(token: String): String {
@@ -78,7 +77,7 @@ class JwtProviderService
     }
 
     fun resolveToken(request: HttpServletRequest): String? {
-        val bearerToken = request.getHeader("Authorization")
+        val bearerToken = request.getHeader("authorization")
         return if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX))
             bearerToken.substring(TOKEN_PREFIX.length)
         else
@@ -89,7 +88,7 @@ class JwtProviderService
     fun validateToken(token: String): Boolean {
         try {
             val claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
-            return claims.body.expiration.before(Date())
+            return true;
         } catch (ex: JwtException) {
             throw JwtAuthenticationException();
         }
@@ -101,7 +100,7 @@ class JwtProviderService
 
     companion object {
         const val DEFAULT_TOKEN_LIFETIME: Int = 3_600_000
-        const val TOKEN_PREFIX = "Bearer_"
+        const val TOKEN_PREFIX = "Bearer "
     }
 
 }

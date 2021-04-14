@@ -1,4 +1,4 @@
-package com.armyenjoyers.hospital.domain
+package com.armyenjoyers.hospital.domain.personnel
 
 import javax.persistence.*
 

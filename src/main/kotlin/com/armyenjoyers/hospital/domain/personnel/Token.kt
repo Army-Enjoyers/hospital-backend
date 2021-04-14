@@ -1,9 +1,9 @@
-package com.armyenjoyers.hospital.domain
+package com.armyenjoyers.hospital.domain.personnel
 
 import javax.persistence.*
 
 @Entity
-@Table(name = "token")
+@Table(name = "tokens")
 data class Token(
     @Id
     @Column(name = "id")

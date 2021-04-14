@@ -19,7 +19,7 @@ class JwtFilter
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val token: String? = jwtProviderService.resolveToken(request as HttpServletRequest)
         if(token != null && jwtProviderService.validateToken(token)){
-            val authentication: Authentication = jwtProviderService.getAuthentication(token)
+            val authentication: Authentication? = jwtProviderService.getAuthentication(token)
             SecurityContextHolder.getContext().authentication = authentication
         }
         chain?.doFilter(request, response)

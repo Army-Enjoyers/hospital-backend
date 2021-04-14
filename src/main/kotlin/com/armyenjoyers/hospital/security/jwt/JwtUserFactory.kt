@@ -1,7 +1,7 @@
 package com.armyenjoyers.hospital.security.jwt
 
-import com.armyenjoyers.hospital.domain.HospitalPersonnel
-import com.armyenjoyers.hospital.domain.Role
+import com.armyenjoyers.hospital.domain.personnel.HospitalPersonnel
+import com.armyenjoyers.hospital.domain.personnel.Role
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service

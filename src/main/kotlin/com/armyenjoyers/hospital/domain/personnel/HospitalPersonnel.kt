@@ -1,4 +1,4 @@
-package com.armyenjoyers.hospital.domain
+package com.armyenjoyers.hospital.domain.personnel
 
 import javax.persistence.*
 
@@ -29,7 +29,7 @@ data class HospitalPersonnel(
     @Column(name = "position")
     val position: String,
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "hospital_personnel_roles",
         joinColumns = [JoinColumn(name = "hospital_personnel_id")],
