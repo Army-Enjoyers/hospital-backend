@@ -4,9 +4,9 @@ WORKDIR /app
 
 COPY . /app
 
-RUN gradle web:bootWar
+RUN gradle bootWar --no-daemon
 
 FROM tomcat:latest as runner
 WORKDIR .
 
-COPY --from=build /app/web/build/libs/hosp.war /usr/local/tomcat/webapps/
+COPY --from=build app/build/libs/hosp.war /usr/local/tomcat/webapps/ROOT.war

@@ -2,6 +2,7 @@ package com.armyenjoyers.hospital.controller
 
 import com.armyenjoyers.hospital.model.ErrorDescription
 import com.armyenjoyers.hospital.security.exception.JwtUsernameNotFoundException
+import com.armyenjoyers.hospital.service.exception.HospitalCertificateNotFoundException
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
@@ -25,6 +26,15 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleUsernameNotFound(ex: JwtUsernameNotFoundException): ErrorDescription? {
         return ErrorDescription(
             "User wasn't found (username=${ex.username})",
+            HttpStatus.NOT_FOUND.value()
+        )
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HospitalCertificateNotFoundException::class)
+    fun handleHospitalCertificateNotFound(ex: HospitalCertificateNotFoundException): ErrorDescription? {
+        return ErrorDescription(
+            "Certificate wasn't found (id=${ex.id})",
             HttpStatus.NOT_FOUND.value()
         )
     }
