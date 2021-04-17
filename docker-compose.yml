@@ -9,8 +9,6 @@ services:
       - PGID=1000
     volumes:
       - mongodb:/data/db
-    ports:
-      - $DB_PORT:$DB_PORT
     restart: unless-stopped
 
   backend:
@@ -22,7 +20,7 @@ services:
     links:
       - mongodb
     ports:
-      - $SERVER_PORT:$SERVER_PORT
+      - 8080:8080
 
 volumes:
   my-db:
