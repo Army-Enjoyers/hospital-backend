@@ -1,4 +1,4 @@
-package com.armyenjoyers.hospital.schemas.annotations
+package com.armyenjoyers.hospital.schema.annotations
 
 @Target(AnnotationTarget.ANNOTATION_CLASS)
 @Retention(AnnotationRetention.RUNTIME)

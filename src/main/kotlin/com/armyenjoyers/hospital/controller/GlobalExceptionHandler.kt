@@ -1,5 +1,6 @@
 package com.armyenjoyers.hospital.controller
 
+import com.armyenjoyers.hospital.controller.exception.IllegalIdException
 import com.armyenjoyers.hospital.model.ErrorDescription
 import com.armyenjoyers.hospital.security.exception.JwtUsernameNotFoundException
 import com.armyenjoyers.hospital.service.exception.HospitalCertificateNotFoundException
@@ -21,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(JwtUsernameNotFoundException::class)
     fun handleUsernameNotFound(ex: JwtUsernameNotFoundException): ErrorDescription? {
         return ErrorDescription(
@@ -30,12 +31,22 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         )
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(HospitalCertificateNotFoundException::class)
     fun handleHospitalCertificateNotFound(ex: HospitalCertificateNotFoundException): ErrorDescription? {
         return ErrorDescription(
             "Certificate wasn't found (id=${ex.id})",
             HttpStatus.NOT_FOUND.value()
+        )
+    }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalIdException::class)
+    fun handleHospitalCertificateNotFound(ex: IllegalIdException): ErrorDescription? {
+        return ErrorDescription(
+            "Illegal value (id=${ex.id})",
+            HttpStatus.BAD_REQUEST.value()
         )
     }
 
