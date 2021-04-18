@@ -37,6 +37,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 dependencies {
     implementation("com.armyenjoyers:doc-generator")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
+
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     implementation ("io.jsonwebtoken:jjwt-api:0.11.2")
